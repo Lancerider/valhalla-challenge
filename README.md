@@ -23,8 +23,12 @@ npm install
 
 Although we use the IMDB Open API, this doesn't deliver the information the way we need. So we implemented node-json-db to gather the data we need and then process it.
 
-:warning: **Be careful!!** IMDB only let us do 100 calls a day. We don't recommend updating the database until we have a payed suscription to IMDB.
+:warning: **Be careful!!** IMDB only let us do 100 calls a day.
+We don't recommend updating the database until we have a payed suscription to IMDB.
 
+```node
+npm run db:update
+```
 ## Running a local environment
 
 To start the express server, run the following
@@ -62,7 +66,7 @@ git push heroku master
 ```
 
 If you want to deploy a different branch
-```bash
+```node
 git push heroku <branch-name>:master
 ```
 
