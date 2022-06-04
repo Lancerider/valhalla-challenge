@@ -2,7 +2,7 @@ import IMDBService from '../services/imdb.service.js';
 
 export const getVikingProductions = async (req, res, next) => {
   try {
-    const moviesAndSeriesEpisodes = await IMDBService.find('viking');
+    const moviesAndSeriesEpisodes = await IMDBService.vikings();
 
     res.status(200).send(moviesAndSeriesEpisodes);
   } catch (error) {
@@ -12,7 +12,7 @@ export const getVikingProductions = async (req, res, next) => {
 
 export const getAxeProductions = async (req, res, next) => {
   try {
-    const moviesAndSeriesEpisodes = await IMDBService.find('axe');
+    const moviesAndSeriesEpisodes = await IMDBService.axes();
 
     res.status(200).send(moviesAndSeriesEpisodes);
   } catch (error) {

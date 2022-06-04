@@ -1,78 +1,70 @@
-import axios from 'axios';
 import boom from '@hapi/boom';
-
-import config from '../config/index.js';
-
-const { apiKey, apiUrl } = config;
+import { getConnection } from '../database/index.js';
+import { getDuration } from '../utils/getDuration.js';
 
 class IMDBService {
-  static async find(title) {
-    try {
-      const moviesUrl = `${apiUrl}/en/API/SearchMovie/${apiKey}/${title}`;
-      const episodesUrl = `${apiUrl}/en/API/SearchEpisode/${apiKey}/${title}`;
+  static findProductions(title) {
+    const { productions } = getConnection().data;
 
-      const moviesCall = axios.get(moviesUrl);
-      const episodesCall = axios.get(episodesUrl);
+    return productions.filter(production => {
+      const productionTitle = production.title
+        ? production.title.toLowerCase()
+        : '';
 
-      const apiCalls = [moviesCall, episodesCall];
-      const apiResponse = await Promise.all(apiCalls);
-
-      const response = {
-        movies: apiResponse[0].data.results,
-        episodes: apiResponse[1].data.results,
-      };
-
-      return response;
-    } catch (error) {
-      throw boom.serverUnavailable('Ups, something went wrong. Try later.');
-    }
+      return productionTitle.includes(title)
+    })
   }
 
-  static async findMovieData(id) {
+  static async vikings() {
     try {
-      const apiCallUrl = `${apiUrl}/en/API/Title/${apiKey}/${id}/FullCast`;
+      const productions = IMDBService.findProductions('viking');
 
-      const apiResponse = await axios.get(apiCallUrl);
+      const episodes = productions.filter(production => (production.type === 'TVEpisode'));
+      const movies = productions.filter(production => (production.type === 'Movie'));
 
-      const { data } = apiResponse;
+      const directors = productions
+        .map(production => production.directors)
+        .filter(director => director !== "");
 
-      return data;
-    } catch (error) {
-      throw boom.serverUnavailable('Ups, something went wrong. Try later.');
-    }
-  }
-
-  static async findDirectors(id) {
-    try {
-      const data = await IMDBService.findMovieData(id);
-
-      // Some results doesn't have info on directorsList
-      const directors = data.fullCast.directors.items;
+      const duration = getDuration(productions);
 
       return {
-        id,
-        movie: data.title,
+        episodes,
+        movies,
         directors,
+        duration,
       };
     } catch (error) {
-      console.log(error);
-      throw boom.serverUnavailable('Ups, something went wrong. Try later.');
+      throw boom.serverUnavailable('Ups, something went wrong.');
     }
   }
 
-  static async findActors(id) {
+  static async axes() {
     try {
-      const apiCallUrl = `${apiUrl}/en/API/Title/${apiKey}/${id}/FullCast`;
+      const productions = IMDBService.findProductions('axe');
 
-      const apiResponse = await axios.get(apiCallUrl);
+      const episodes = productions.filter(production => (production.type === 'TVEpisode'));
+      const movies = productions.filter(production => (production.type === 'Movie'));
+
+      let starts = [];
+
+      productions.forEach(production => {
+        if (!production.stars) return;
+
+        const starsArray = production.stars.split(', ')
+        starts = [...starts, ...starsArray];
+      })
+
+      const duration = getDuration(productions);
 
       return {
-        id,
-        movie: apiResponse.data.title,
-        directors: apiResponse.data.directorList,
+        episodes,
+        movies,
+        starts,
+        duration,
       };
     } catch (error) {
-      throw boom.serverUnavailable('Ups, something went wrong. Try later.');
+      throw boom.serverUnavailable('Ups, something went wrong.');
     }
   }
 }
