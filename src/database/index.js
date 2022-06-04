@@ -21,7 +21,6 @@ export const createConnection = async () => {
     await db.write();
   }
 
-
   console.log('Database ready');
 }
 
