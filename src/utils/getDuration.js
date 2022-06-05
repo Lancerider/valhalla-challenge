@@ -13,8 +13,8 @@ export const getDuration = (productions) => {
       return minutes + parseInt(runtimeMins);
     }, 0);
 
-  const hours = totalDuration ? `${Math.floor(totalDuration/60)} h` : '';
-  const minutes = totalDuration%60 ? `${Math.floor(totalDuration%60)} min` : '';
+  const hours = Math.floor(totalDuration/60) ? `${Math.floor(totalDuration/60)}h` : '';
+  const minutes = totalDuration%60 ? `${totalDuration%60}min` : '';
 
-  return `${hours} ${minutes}`;
+  return hours ? `${hours} ${minutes}` : `${minutes}`;
 }

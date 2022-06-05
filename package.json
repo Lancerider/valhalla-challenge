@@ -8,7 +8,7 @@
     "db:update": "node ./src/utils/database.scrapper.js",
     "dev": "nodemon ./src/index.js --ignore *db.json",
     "start": "node ./src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles"
   },
   "keywords": [
     "IMDb",
@@ -28,6 +28,8 @@
     "eslint": "^8.16.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.26.0",
-    "nodemon": "^2.0.16"
+    "nodemon": "^2.0.16",
+    "jest": "^28.1.0",
+    "supertest": "^6.2.3"
   }
 }
