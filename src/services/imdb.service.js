@@ -46,13 +46,13 @@ class IMDBService {
       const episodes = productions.filter(production => (production.type === 'TVEpisode'));
       const movies = productions.filter(production => (production.type === 'Movie'));
 
-      let starts = [];
+      let stars = [];
 
       productions.forEach(production => {
         if (!production.stars) return;
 
         const starsArray = production.stars.split(', ')
-        starts = [...starts, ...starsArray];
+        stars = [...stars, ...starsArray];
       })
 
       const duration = getDuration(productions);
@@ -60,7 +60,7 @@ class IMDBService {
       return {
         episodes,
         movies,
-        starts,
+        stars,
         duration,
       };
     } catch (error) {
